@@ -6,11 +6,17 @@ class Analyzer
 		@result = Plist::parse_xml('GratefulDead.xml')
 		@song_count = 0
 		@rating_count = 0
-		@song_titles = Hash.new
+		@name_count = Hash.new
+		@year_count = Hash.new
+		@album_count = Hash.new
+		@composer_count = Hash.new
 		@song_ratings = Hash.new
 		@year_ratings = Hash.new
-		@year_count = Hash.new
-		value_count(@year_count, 'Year')
+		@album_ratings = Hash.new
+		@composer_ratings = Hash.new
+		value_count(@composer_count, 'Composer')
+		ratings_aggregator(@composer_ratings, @composer_count, 'Composer')
+		
 	end
 
 	#counts all tracks in the file.
@@ -26,13 +32,13 @@ class Analyzer
 	#stores in Hash with song name as key and count as value.
 	def individual_track_count
 		@result['Tracks'].each do |key, value|
-			if @song_titles.has_key?(value['Name'])
-				@song_titles[value['Name']] +=1
+			if @name_count.has_key?(value['Name'])
+				@name_count[value['Name']] +=1
 			else
-				@song_titles[value['Name']] = 1
+				@name_count[value['Name']] = 1
 			end
 		end
-		#print_hash_by_descending_value(@song_titles, "titled")
+		#print_hash_by_descending_value(@name_count, "titled")
 	end
 	
 	#Tallies the sum of all the ratings for each uniquely named song.
@@ -46,7 +52,7 @@ class Analyzer
 				@song_ratings[value['Name']] = value['Rating']
 			end
 		end
-		ratings_calculation(@song_ratings, @song_titles)
+		ratings_calculation(@song_ratings, @name_count)
 		#print_hash_by_descending_value(@song_ratings, "rated")
 	end
 	
@@ -75,8 +81,19 @@ class Analyzer
 				hash[value[value_name]] = 1 
 			end
 		end
-		print_song_ratings(hash)
+		#print_song_ratings(hash)
 	end
+	#General purpose rating method.
+	def ratings_aggregator(hash_one, hash_two, value_name)
+		@result['Tracks'].each do |key, value|
+			if hash_one.has_key?(value[value_name])
+				hash_one[value[value_name]] += value['Rating']
+			else
+				hash_one[value[value_name]] = value['Rating']
+			end
+		end
+		ratings_calculation(hash_one, hash_two)
+	end	
 	
 	#Method to count songs per year
 	def year_count

@@ -1,7 +1,7 @@
 require_relative 'analyzer.rb'
 class Main
 	def initialize
-		analyze = Analyzer.new
+		Analyzer.new
 	end
 end
 
