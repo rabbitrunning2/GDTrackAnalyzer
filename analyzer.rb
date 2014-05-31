@@ -10,15 +10,20 @@ class Analyzer
 		@song_ratings = Hash.new
 		@year_ratings = Hash.new
 		@year_count = Hash.new
+		value_count(@year_count, 'Year')
 	end
 
+	#counts all tracks in the file.
+	#returns song count value.
 	def track_count
 		@result['Tracks'].each do
 			@song_count +=1
 		end
-		#puts @song_count
+		@song_count
 	end
 	
+	#tallies number of occurrences for each uniquely named track.
+	#stores in Hash with song name as key and count as value.
 	def individual_track_count
 		@result['Tracks'].each do |key, value|
 			if @song_titles.has_key?(value['Name'])
@@ -30,6 +35,9 @@ class Analyzer
 		#print_hash_by_descending_value(@song_titles, "titled")
 	end
 	
+	#Tallies the sum of all the ratings for each uniquely named song.
+	#Ratings are  stored in xml as 0-100 in 20 increments.
+	#Must be divided by 20 to get 0-5 star ratings.
 	def ratings_count
 		@result['Tracks'].each do |key, value|
 			if @song_ratings.has_key?(value['Name'])
@@ -42,6 +50,11 @@ class Analyzer
 		#print_hash_by_descending_value(@song_ratings, "rated")
 	end
 	
+	#Calculates the true average of the ratings of a Hash
+	#hash_one is the hash with the ratings
+	#hash_two contains the total count of the measured field to use for division
+	#to get average.
+	#TODO make sure hash with total exists.
 	def ratings_calculation(hash_one, hash_two)
 		hash_one.each do |key, value|
 			if hash_one.has_key?(key)
@@ -50,6 +63,19 @@ class Analyzer
 			end
 		end
 		print_song_ratings(hash_one)
+	end
+	
+	#All Purpose method to add up occurrences of any given value
+	#in the xml document. 
+	def value_count(hash, value_name)
+		@result['Tracks'].each do |key, value|
+			if hash.has_key?(value[value_name])
+				hash[value[value_name]] += 1 
+			else
+				hash[value[value_name]] = 1 
+			end
+		end
+		print_song_ratings(hash)
 	end
 	
 	#Method to count songs per year
@@ -76,6 +102,7 @@ class Analyzer
 		ratings_calculation(@year_ratings, @year_count)
 	end
 
+	#This counts the average rating of all Tracks
 	def all_song_rating_average
 		track_count
 		@result['Tracks'].each do |key, value|
@@ -84,6 +111,7 @@ class Analyzer
 		puts "The average rating of all songs is: #{(@rating_count.to_f/@song_count)/20}"
 	end
 	
+	#Formatted print for values without any language.
 	def print_song_ratings(hash)
 		size = hash.length
 		hash.sort{|a,b| a[1]<=>b[1]}.reverse.first(size).each { |elem|
@@ -91,6 +119,7 @@ class Analyzer
 		}
 	end
 	
+	#Formatted print with sentence structure
 	def print_hash_by_descending_value(hash, string_id)
 		hash.sort{|a,b| a[1]<=>b[1]}.reverse.first(100).each { |elem|
 			if (elem[1] > 1)
@@ -103,11 +132,3 @@ class Analyzer
 	end
 	
 end
-
-a = Analyzer.new
-# a.track_count
-# a.individual_track_count
-# a.ratings_count
-# a.all_song_rating_average
-a.year_count
-a.year_ratings
