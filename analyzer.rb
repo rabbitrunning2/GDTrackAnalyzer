@@ -14,9 +14,9 @@ class Analyzer
 		@year_ratings = Hash.new
 		@album_ratings = Hash.new
 		@composer_ratings = Hash.new
-		value_count(@composer_count, 'Composer')
-		ratings_aggregator(@composer_ratings, @composer_count, 'Composer')
 		
+		value_count(@album_count, 'Album')
+		ratings_aggregator(@album_ratings, @album_count, 'Album')
 	end
 
 	#counts all tracks in the file.
@@ -86,11 +86,11 @@ class Analyzer
 	#General purpose rating method.
 	def ratings_aggregator(hash_one, hash_two, value_name)
 		@result['Tracks'].each do |key, value|
-			if hash_one.has_key?(value[value_name])
-				hash_one[value[value_name]] += value['Rating']
-			else
-				hash_one[value[value_name]] = value['Rating']
-			end
+				if hash_one.has_key?(value[value_name])
+					hash_one[value[value_name]] += value['Rating']
+				else
+					hash_one[value[value_name]] = value['Rating']
+				end
 		end
 		ratings_calculation(hash_one, hash_two)
 	end	
