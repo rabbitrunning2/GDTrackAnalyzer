@@ -1,6 +1,5 @@
 class Screen
 	def initialize(output)
-		#@input
 		puts_to_screen(output)
 	end
 	
