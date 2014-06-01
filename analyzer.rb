@@ -1,4 +1,5 @@
 require 'plist'
+require 'csv.rb'
 
 class Analyzer
 
@@ -69,6 +70,13 @@ class Analyzer
 			end
 		end
 		print_song_ratings(hash_one)
+		hash_to_csv(hash_one, "AlbumRatings")
+	end
+	
+	#Method converts Hash to a csv file.
+	#takes in the hash and the name you want for the file.
+	def hash_to_csv(hash, name)
+		CSV.open(name+".csv", "wb") {|csv| hash.to_a.each {|elem| csv << elem}}
 	end
 	
 	#All Purpose method to add up occurrences of any given value
