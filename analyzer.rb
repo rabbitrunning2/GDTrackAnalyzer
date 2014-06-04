@@ -48,6 +48,11 @@ class Analyzer
 		@song_count
 	end
 	
+	#TODO method to compare ratings for songs by Artist.
+	#OR any two separate Hashes as currently designed.
+	def comparative_values
+	end
+	
 	#Calculates the true average of the ratings of a Hash
 	#hash_one is the hash with the ratings
 	#hash_two contains the total count of the measured field to use for division
