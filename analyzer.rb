@@ -12,13 +12,15 @@ class Analyzer
 		@year_count = Hash.new
 		@album_count = Hash.new
 		@composer_count = Hash.new
+		@artist_name = Hash.new
 		
 		@song_ratings = Hash.new
 		@year_ratings = Hash.new
 		@album_ratings = Hash.new
 		@composer_ratings = Hash.new
 		
-		generate_files
+		#generate_files
+		comparative_values
 	end
 
 	def generate_files
@@ -37,6 +39,7 @@ class Analyzer
 		value_count(@album_count, 'Album')
 		ratings_aggregator(@album_ratings, @album_count, 'Album')
 		hash_to_csv(@album_ratings, 'GDAlbumRatings')
+		
 	end
 	
 	#counts all tracks in the file.
@@ -51,6 +54,11 @@ class Analyzer
 	#TODO method to compare ratings for songs by Artist.
 	#OR any two separate Hashes as currently designed.
 	def comparative_values
+		@result['Tracks'].each do |key, value|
+			if @artist_name.has_key?('Artist') and !@name_count.empty?
+				@artist_name[value['Artist']] = @name_count
+			end
+		end
 	end
 	
 	#Calculates the true average of the ratings of a Hash
