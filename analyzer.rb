@@ -19,26 +19,26 @@ class Analyzer
 		@album_ratings = Hash.new
 		@composer_ratings = Hash.new
 		
-		#generate_files
-		comparative_values
+		generate_files
+		#comparative_values
 	end
 
 	def generate_files
 		value_count(@year_count, 'Year')
 		ratings_aggregator(@year_ratings, @year_count, 'Year')
-		hash_to_csv(@year_ratings, 'GDYearRatings')
+		hash_to_csv(hash_sort(@year_ratings), 'GDYearRatings')
 		
-		value_count(@name_count, 'Name')
-		ratings_aggregator(@song_ratings, @name_count, 'Name')
-		hash_to_csv(@song_ratings, 'GDSongRatings')
-		
-		value_count(@composer_count, 'Composer')
-		ratings_aggregator(@composer_ratings, @composer_count, 'Composer')
-		hash_to_csv(@composer_ratings, 'GDComposerRatings')
-		
-		value_count(@album_count, 'Album')
-		ratings_aggregator(@album_ratings, @album_count, 'Album')
-		hash_to_csv(@album_ratings, 'GDAlbumRatings')
+# 		value_count(@name_count, 'Name')
+# 		ratings_aggregator(@song_ratings, @name_count, 'Name')
+# 		hash_to_csv(@song_ratings, 'GDSongRatings')
+# 		
+# 		value_count(@composer_count, 'Composer')
+# 		ratings_aggregator(@composer_ratings, @composer_count, 'Composer')
+# 		hash_to_csv(@composer_ratings, 'GDComposerRatings')
+# 		
+# 		value_count(@album_count, 'Album')
+# 		ratings_aggregator(@album_ratings, @album_count, 'Album')
+# 		hash_to_csv(@album_ratings, 'GDAlbumRatings')
 		
 	end
 	
@@ -117,6 +117,10 @@ class Analyzer
 		end
 		#puts "The average rating of all songs is: #{(@rating_count.to_f/@song_count)/20}"
 		@rating_count
+	end
+	
+	def hash_sort(hash)
+		hash.sort{|a,b| a[1]<=>b[1]}.reverse.each
 	end
 	
 	#Formatted print for values without any language.
