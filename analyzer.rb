@@ -4,7 +4,7 @@ require 'csv.rb'
 class Analyzer
 
 	def initialize
-		@result = Plist::parse_xml('GratefulDead.xml')
+		@result = Plist::parse_xml('Grateful Dead.xml')
 		@song_count = 0
 		@rating_count = 0
 		
@@ -13,11 +13,13 @@ class Analyzer
 		@album_count = Hash.new
 		@composer_count = Hash.new
 		@artist_name = Hash.new
+		@comment_count = Hash.new
 		
 		@song_ratings = Hash.new
 		@year_ratings = Hash.new
 		@album_ratings = Hash.new
 		@composer_ratings = Hash.new
+		@comment_ratings = Hash.new
 		
 		generate_files
 		#comparative_values
@@ -28,17 +30,21 @@ class Analyzer
 		ratings_aggregator(@year_ratings, @year_count, 'Year')
 		hash_to_csv(hash_sort(@year_ratings), 'GDYearRatings')
 		
-# 		value_count(@name_count, 'Name')
-# 		ratings_aggregator(@song_ratings, @name_count, 'Name')
-# 		hash_to_csv(@song_ratings, 'GDSongRatings')
-# 		
-# 		value_count(@composer_count, 'Composer')
-# 		ratings_aggregator(@composer_ratings, @composer_count, 'Composer')
-# 		hash_to_csv(@composer_ratings, 'GDComposerRatings')
-# 		
-# 		value_count(@album_count, 'Album')
-# 		ratings_aggregator(@album_ratings, @album_count, 'Album')
-# 		hash_to_csv(@album_ratings, 'GDAlbumRatings')
+		value_count(@name_count, 'Name')
+		ratings_aggregator(@song_ratings, @name_count, 'Name')
+		hash_to_csv(hash_sort(@song_ratings), 'GDSongRatings')
+		
+		value_count(@composer_count, 'Composer')
+		ratings_aggregator(@composer_ratings, @composer_count, 'Composer')
+		hash_to_csv(hash_sort(@composer_ratings), 'GDComposerRatings')
+		
+		value_count(@album_count, 'Album')
+		ratings_aggregator(@album_ratings, @album_count, 'Album')
+		hash_to_csv(hash_sort(@album_ratings), 'GDAlbumRatings')
+		
+		value_count(@comment_count, 'Comments')
+		ratings_aggregator(@comment_ratings, @comment_count, 'Comments')
+		hash_to_csv(hash_sort(@comment_ratings), 'GDCommentRatings')
 		
 	end
 	
@@ -73,8 +79,6 @@ class Analyzer
 				hash_one.store(key, average_rating)
 			end
 		end
-		#print_song_ratings(hash_one)
-		#hash_to_csv(hash_one, "GDYearRatings")
 	end
 	
 	#Method converts Hash to a csv file.
@@ -93,7 +97,6 @@ class Analyzer
 				hash[value[value_name]] = 1 
 			end
 		end
-		#print_song_ratings(hash)
 	end
 	
 	#General purpose rating method.
@@ -115,7 +118,6 @@ class Analyzer
 		@result['Tracks'].each do |key, value|
 			@rating_count += value['Rating'] 
 		end
-		#puts "The average rating of all songs is: #{(@rating_count.to_f/@song_count)/20}"
 		@rating_count
 	end
 	
